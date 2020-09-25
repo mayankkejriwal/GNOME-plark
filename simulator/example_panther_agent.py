@@ -29,6 +29,8 @@ def make_madman_phase_move(player, current_gameboard, allowable_actions, code):
             return null_action, dict()
 
     else:
+        if current_gameboard['history']['function'][-1] == null_action:
+            return null_action, dict()
         last_path = set(previous_player.path_history[-1])
         if player.current_position.location_name in last_path and flip_pelican_counter in allowable_actions:
             print('flipping pelican counter since it passed over plark\'s current position...')

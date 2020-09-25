@@ -163,7 +163,7 @@ def _location_sanity_test_neighbors(game_elements):
         lmap['0110G']._print_location_data()
         flag = False
 
-    if not lmap['0101A'].serialize_neighbors()==set(['0201A','0102A']):
+    if not lmap['0101A'].serialize_neighbors()==set(['0201A','0102A','escape']):
         lmap['0101A']._print_location_data()
         flag = False
 
