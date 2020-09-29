@@ -62,7 +62,8 @@ def check_for_winchester(current_gameboard):
         if p.player_class == 'Pelican':
 
             for weapon_name, weapon in current_gameboard['weapons_inventory'].items():
-                if weapon.weapon_class == 'torpedo' and weapon.state == 'undropped' or 'first_turn' or 'second_turn':
+                if weapon.weapon_class == 'torpedo' and \
+                        (weapon.state == 'undropped' or weapon.state == 'first_turn' or weapon.state == 'second_turn'):
                     print(f'Some torpedos are undropped or still running on the board')
                     return False
 
