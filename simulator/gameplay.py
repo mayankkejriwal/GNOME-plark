@@ -226,7 +226,7 @@ def play_game():
             print("All player agents have been shutdown. ")
             print("GAME OVER")
             print(winner.player_name)
-            return winner
+            return winner if winner else None
 
 
 # def play_game_in_tournament(game_seed, inject_novelty_function=None):
