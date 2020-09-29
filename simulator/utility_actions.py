@@ -19,6 +19,8 @@ def flip_torpedo(torpedo):
 def is_plark_sunk(current_gameboard):
     print('Has the plark been sunk?')
     for p in current_gameboard['players']:
+        if p.player_class == 'Pelican':
+            continue
         if p.player_class == 'Panther' and p.damage_status == 'sunk':
             print(p.player_name, ' is sunk. Returning True')
             return True
@@ -58,7 +60,13 @@ def check_for_winchester(current_gameboard):
     print('checking for winchester...')
     for p in current_gameboard['players']:
         if p.player_class == 'Pelican':
-            if not p.weapons_bay['torpedo'] or len(p.weapons_bay['torpedo']) == 0:
+
+            for weapon_name, weapon in current_gameboard['weapons_inventory'].items():
+                if weapon.weapon_class == 'torpedo' and weapon.state == 'undropped' or 'first_turn' or 'second_turn':
+                    print(f'Some torpedos are undropped or still running on the board')
+                    return False
+
+            if not p.weapons_bay['torpedo']:
                 print(p.player_name,' does not have any torpedoes. Returning True...')
                 return True
             else:
