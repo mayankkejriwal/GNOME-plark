@@ -72,21 +72,21 @@ def make_maypole_phase_move(player, current_gameboard, allowable_actions, code):
         if weapon.location is None or weapon.weapon_class == 'torpedo':
             continue
         else:
-            l = weapon.location
-            print('we need to determine new status for sonobuoy ',weapon_name,' which is currently at ',l.location_name)
-            if plark_location.calculate_distance(current_gameboard, l) <= det_range:
+            cur_weapon_location = weapon.location
+            print('we need to determine new status for sonobuoy ',weapon_name,' which is currently at ',cur_weapon_location.location_name)
+            if plark_location.calculate_distance(current_gameboard, cur_weapon_location) <= det_range:
                 print('sonobuoy is within plark det_range. updating to hot...')
                 s_updates[weapon_name] = 'hot'
                 continue
             else:
-                dis = l.locate_nearest_disturbed_water(current_gameboard)
-                if dis and dis.calculate_distance(current_gameboard, l) <= current_gameboard['sonobuoy_disturbed_water_threshold']:
+                dis = cur_weapon_location.locate_nearest_disturbed_water(current_gameboard)
+                if dis and dis.calculate_distance(current_gameboard, cur_weapon_location) <= current_gameboard['sonobuoy_disturbed_water_threshold']:
                     print('sonobuoy is within sonobuoy_disturbed_water_threshold of disturbed water. updating to hot...')
                     s_updates[weapon_name] = 'hot'
                     continue
 
-                expl = l.locate_nearest_underwater_explosion(current_gameboard)
-                if  expl and expl.calculate_distance(current_gameboard, l) <= current_gameboard['sonobuoy_underwater_explosion_threshold']:
+                expl = cur_weapon_location.locate_nearest_underwater_explosion(current_gameboard)
+                if expl and expl.calculate_distance(current_gameboard, cur_weapon_location) <= current_gameboard['sonobuoy_underwater_explosion_threshold']:
                     print('sonobuoy is within sonobuoy_underwater_explosion_threshold of disturbed water. updating to hot...')
                     s_updates[weapon_name] = 'hot'
                     continue
@@ -147,6 +147,9 @@ def make_bloodhound_phase_move(player, current_gameboard, allowable_actions, cod
         print('Non-Panther is trying to make bloodhound phase move...')
         raise Exception
 
+    print('change explosion to disturbed water, or remove disturbed water')
+    update_water_counters(current_gameboard)
+
     if move_update_torpedoes in allowable_actions:
         print('executing move_update_torpedoes...')
         params = dict()
@@ -162,7 +165,8 @@ def make_bloodhound_phase_move(player, current_gameboard, allowable_actions, cod
 
 def initialization_routine(agent, current_gameboard):
     if agent.agent_type == 'Panther':
-        agent.init_position = '0503H'
+        # agent.init_position = '0503H'
+        agent.init_position = '0501B'
     elif agent.agent_type == 'Pelican':
         agent.init_position = '0405C'
         agent.init_weapons_bay = dict()

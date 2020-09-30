@@ -27,24 +27,22 @@ def make_pelican_phase_move(player, current_gameboard, allowable_actions, code):
     path = list()
     path.append(player.current_position.location_name)
     weapons_dict = dict()
+
     while len(path) < current_gameboard['max_pelican_path_length']:
         m = [i for i in current_gameboard['location_map'][path[-1]].neighbors if i.location_name != 'escape'] # pelican can't leave the board
         np.random.shuffle(m)
         print('appending location ',m[0].location_name,' to return-path of ',player.player_name)
         path.append(m[0].location_name)
 
-        if len(path) == 5:
-            if player.weapons_bay['torpedo']:
-                weapons_dict[path[-1]] = set()
-                weapons_dict[path[-1]].add(player.eject_torpedo().weapon_name)
-                print('we will drop torpedo ', weapons_dict[path[-1]], ' on location ', path[-1])
+        if path[-1] not in weapons_dict:
+            weapons_dict[path[-1]] = set()
 
-            elif player.weapons_bay['sonobuoy']:
-                weapons_dict[path[-1]] = set()
+        if len(path) == 5 and player.weapons_bay['sonobuoy']:
                 weapons_dict[path[-1]].add(player.eject_sonobuoy().weapon_name)
                 print('we will drop sonobuoy ',weapons_dict[path[-1]],' on location ',path[-1])
-
-
+        if len(path) == 5 and player.weapons_bay['torpedo']:
+                weapons_dict[path[-1]].add(player.eject_torpedo().weapon_name)
+                print('we will drop torpedo ', weapons_dict[path[-1]], ' on location ', path[-1])
 
 
     params = dict()
@@ -84,7 +82,7 @@ def initialization_routine(agent, current_gameboard):
     if agent.agent_type == 'Panther':
         agent.init_position = '0503H'
     elif agent.agent_type == 'Pelican':
-        agent.init_position = '0405C'
+        agent.init_position = '0602H'
         agent.init_weapons_bay = dict()
         agent.init_weapons_bay['sonobuoy_count'] = 12
         agent.init_weapons_bay['torpedo_count'] = 6
