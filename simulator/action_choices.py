@@ -107,20 +107,19 @@ def move_pelican_drop_weapons(player, current_gameboard, pelican_path, weapons_d
     print('player has been successfully moved...now dropping weapons, if any.')
 
     if weapons_dict:
-        for l, w in weapons_dict.items():
-            if l not in pelican_path:
+        for location, weapon_names in weapons_dict.items():
+            if location not in pelican_path:
                 print('weapon is not being dropped on your path...')
-                _re_add_weapons_to_bay(player, current_gameboard,weapons_dict)
+                _re_add_weapons_to_bay(player, current_gameboard, weapons_dict)
                 print('weapons-deployment did not succeed...')
                 return flag_config_dict['failure_code']
             else:
-                for v in w:
-                    ww = current_gameboard['weapons_inventory'][v]
+                for name in weapon_names:
+                    ww = current_gameboard['weapons_inventory'][name]
                     if ww.weapon_class == 'sonobuoy':
-                        _drop_sonobuoy(current_gameboard, v, l)
+                        _drop_sonobuoy(current_gameboard, name, location)
                     elif ww.weapon_class == 'torpedo':
-                        _drop_torpedo(current_gameboard, v, l)
-
+                        _drop_torpedo(current_gameboard, name, location)
 
     print('weapons deployment and movement of player succeeded.')
     return flag_config_dict['successful_action']
@@ -238,6 +237,9 @@ def move_update_torpedoes(current_gameboard):
                     else:
                         print('Die result came up 3 or 4. changing plark damage status from ', plark.damage_status, ' to damaged.')
                         plark.damage_status = 'damaged'
+
+                print(f'Update explosion status of location {plark.current_position.location_name} from False to True')
+                plark.current_position.underwater_explosion = True
 
                 print('changing state of ',weapon_name,' from ',weapon.state,' to removed and setting location from ',weapon.location.location_name,' to None.')
                 weapon.state = 'removed'
