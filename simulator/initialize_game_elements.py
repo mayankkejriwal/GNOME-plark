@@ -23,7 +23,7 @@ def initialize_board(player_decision_agents):
     _initialize_locations(game_elements)
     print('finished initializing location data structures...')
 
-    game_elements['max_pelican_path_length'] = 10
+    game_elements['max_pelican_path_length'] = 20
     game_elements['max_panther_path_length'] = 2
 
     game_elements['weapons_inventory'] = dict() # key is the weapon name, value is the weapon instance
@@ -149,6 +149,7 @@ def _initialize_locations(game_elements): # instantiate, implement and expand as
             location.neighbors.add(escape)
             location.num_neighbors += 1
 
+    game_elements['location_map']['escape'] = escape
 
     # make sure to do a sanity check.
     _location_sanity_test_neighbors(game_elements)
