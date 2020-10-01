@@ -238,8 +238,12 @@ def move_update_torpedoes(current_gameboard):
                         print('Die result came up 3 or 4. changing plark damage status from ', plark.damage_status, ' to damaged.')
                         plark.damage_status = 'damaged'
 
-                print(f'Update explosion status of location {plark.current_position.location_name} from False to True')
-                plark.current_position.underwater_explosion = True
+                if die_result == 5 or die_result == 6:
+                    print(f'Torpedo {weapon_name} miss panther at location {plark.current_position.location_name}')
+                else:
+                    print(f'Update explosion status of location {plark.current_position.location_name} from False to '
+                          f'True because torpedo {weapon_name} hit panther')
+                    plark.current_position.underwater_explosion = True
 
                 print('changing state of ',weapon_name,' from ',weapon.state,' to removed and setting location from ',weapon.location.location_name,' to None.')
                 weapon.state = 'removed'
