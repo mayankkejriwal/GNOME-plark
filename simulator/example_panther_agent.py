@@ -37,6 +37,14 @@ def make_madman_phase_move(player, current_gameboard, allowable_actions, code):
             params = dict()
             params['current_gameboard'] = current_gameboard
             params['pelican_player'] = previous_player
+            params['is_meet'] = True
+            return flip_pelican_counter, params
+        elif previous_player.MAD:
+            print('flipping pelican MAD counter back to false')
+            params = dict()
+            params['current_gameboard'] = current_gameboard
+            params['pelican_player'] = previous_player
+            params['is_meet'] = False
             return flip_pelican_counter, params
 
     if null_action in allowable_actions:
@@ -165,8 +173,8 @@ def make_bloodhound_phase_move(player, current_gameboard, allowable_actions, cod
 
 def initialization_routine(agent, current_gameboard):
     if agent.agent_type == 'Panther':
-        # agent.init_position = '0503H'
-        agent.init_position = '0501B'
+        agent.init_position = '0503H'
+        # agent.init_position = '0501B'
     elif agent.agent_type == 'Pelican':
         agent.init_position = '0405C'
         agent.init_weapons_bay = dict()

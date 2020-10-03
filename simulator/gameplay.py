@@ -36,8 +36,6 @@ def simulate_game_instance(game_elements, history_log_file=None, np_seed=2):
 
             for p in game_elements['players']:
                 if p.status == 'current':
-                    print('resetting MAD to false for ',p.player_name)
-                    p.manipulate_MAD(new_MAD=False)
 
                     print(p.player_name,' is making pelican phase moves.')
                     p.make_pelican_phase_moves(game_elements)
@@ -150,6 +148,7 @@ def initialize_player_data(game_elements):
             p.current_position = game_elements['location_map'][p.agent.init_position]
             p.weapons_bay = dict()
             for k,v in p.agent.init_weapons_bay.items():
+                # check for 24
                 if k == 'sonobuoy_count':
                     for i in range(0,v):
                         if 'sonobuoy' not in p.weapons_bay:
@@ -225,7 +224,6 @@ def play_game():
         else:
             print("All player agents have been shutdown. ")
             print("GAME OVER")
-            print(winner.player_name)
             return winner if winner else None
 
 

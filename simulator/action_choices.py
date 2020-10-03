@@ -12,12 +12,12 @@ def null_action():
     return flag_config_dict['successful_action'] # does nothing; code is always a success
 
 
-def flip_pelican_counter(pelican_player, current_gameboard):
+def flip_pelican_counter(pelican_player, current_gameboard, is_meet):
     """
     :return: action code
     """
-    print('setting MAD to True for ',pelican_player.player_name)
-    pelican_player.manipulate_MAD(new_MAD=True)
+    print(f'setting MAD to {is_meet} for {pelican_player.player_name}')
+    pelican_player.manipulate_MAD(new_MAD=is_meet)
     return flag_config_dict['successful_action']
 
 
