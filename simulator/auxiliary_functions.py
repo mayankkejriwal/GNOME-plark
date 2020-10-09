@@ -1,50 +1,34 @@
 import networkx as nx
 
+
 def generate_default_gameboard_graph():
     G = nx.Graph()
     nodes = set()
     edges = set()
     for k in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J']:
-        for i in range(1,11):
-            for j in range(1,11):
+        for i in range(1, 11):
+            for j in range(1, 11):
 
-                location_name = _convert_ijk_to_string(i,j,k)
+                location_name = _convert_ijk_to_string(i, j, k)
                 nodes.add(location_name)
 
-                if (i>=2 and i<=9) and (j>=2 and j<=9): # the normal case
-                    if j%2==0:
-                        if i%2 == 0:
-                            edges.add((location_name,_convert_ijk_to_string(i,j+1,k)))
-                            edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i-1, j, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i+1, j, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i - 1, j + 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i + 1, j + 1, k)))
-                        else:
-                            edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i - 1, j - 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i + 1, j - 1, k)))
+                if (2 <= i <= 9) and (2 <= j <= 9):  # the normal case
+                    if i % 2 == 0:
+                        edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j + 1, k)))
                     else:
-                        if i % 2 == 0:
-                            edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i - 1, j + 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i + 1, j + 1, k)))
-                        else:
-                            edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i - 1, j - 1, k)))
-                            edges.add((location_name, _convert_ijk_to_string(i + 1, j - 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j - 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j - 1, k)))
 
-
-                elif i == 1 and (j>=2 and j<=9) and k in ['B','C','E', 'F','H', 'J']: # left edges of zones
+                elif i == 1 and (2 <= j <= 9) and k in ['B', 'C', 'E', 'F', 'H', 'J']:  # left edges of zones
                     mapping = dict()
                     mapping['C'] = 'B'
                     mapping['B'] = 'A'
@@ -57,9 +41,9 @@ def generate_default_gameboard_graph():
                     edges.add((location_name, _convert_ijk_to_string(i + 1, j - 1, k)))
                     edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
                     edges.add((location_name, _convert_ijk_to_string(10, j, mapping[k])))
-                    edges.add((location_name, _convert_ijk_to_string(10, j-1, mapping[k])))
+                    edges.add((location_name, _convert_ijk_to_string(10, j - 1, mapping[k])))
 
-                elif i == 10 and (j>=2 and j<=9) and k in ['B','A','E', 'D','H', 'G']: # right edges of zones
+                elif i == 10 and (2 <= j <= 9) and k in ['B', 'A', 'E', 'D', 'H', 'G']:  # right edges of zones
                     mapping = dict()
                     mapping['A'] = 'B'
                     mapping['B'] = 'C'
@@ -74,7 +58,7 @@ def generate_default_gameboard_graph():
                     edges.add((location_name, _convert_ijk_to_string(1, j, mapping[k])))
                     edges.add((location_name, _convert_ijk_to_string(1, j+1, mapping[k])))
 
-                elif j == 1 and (i!=1 and i%2!=0) and k in ['D', 'E', 'F', 'G', 'H', 'J']: # top edges of zones
+                elif j == 1 and (i != 1 and i % 2 != 0) and k in ['D', 'E', 'F', 'G', 'H', 'J']:  # top edges of zones
                     mapping = dict()
                     mapping['D'] = 'A'
                     mapping['E'] = 'B'
@@ -83,13 +67,13 @@ def generate_default_gameboard_graph():
                     mapping['H'] = 'E'
                     mapping['J'] = 'F'
                     edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
-                    edges.add((location_name, _convert_ijk_to_string(i+1, j, k)))
+                    edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
                     edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
                     edges.add((location_name, _convert_ijk_to_string(i - 1, 10, mapping[k])))
                     edges.add((location_name, _convert_ijk_to_string(i, 10, mapping[k])))
                     edges.add((location_name, _convert_ijk_to_string(i+1, 10, mapping[k])))
 
-                elif j == 10 and (i!=10 and i !=1) and k in ['D', 'E', 'F', 'A', 'B', 'C']: # bottom edges of zones
+                elif j == 10 and (i != 10 and i != 1) and k in ['D', 'E', 'F', 'A', 'B', 'C']:  # bottom edges of zones
                     mapping = dict()
                     mapping['D'] = 'G'
                     mapping['E'] = 'H'
@@ -97,43 +81,42 @@ def generate_default_gameboard_graph():
                     mapping['A'] = 'D'
                     mapping['B'] = 'E'
                     mapping['C'] = 'F'
-                    if i%2 == 0:
-                        edges.add((location_name, _convert_ijk_to_string(i, 9, k)))
-                        edges.add((location_name, _convert_ijk_to_string(i+1, 10, k)))
-                        edges.add((location_name, _convert_ijk_to_string(i - 1, 10, k)))
+                    if i % 2 == 0:
+                        edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
                         edges.add((location_name, _convert_ijk_to_string(i - 1, 1, mapping[k])))
                         edges.add((location_name, _convert_ijk_to_string(i, 1, mapping[k])))
-                        edges.add((location_name, _convert_ijk_to_string(i+1, 1, mapping[k])))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, 1, mapping[k])))
                     else:
-                        edges.add((location_name, _convert_ijk_to_string(i, 9, k)))
-                        edges.add((location_name, _convert_ijk_to_string(i + 1, 9, k)))
-                        edges.add((location_name, _convert_ijk_to_string(i - 1, 9, k)))
-                        edges.add((location_name, _convert_ijk_to_string(i - 1, 10, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j - 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j - 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
                         edges.add((location_name, _convert_ijk_to_string(i, 1, mapping[k])))
-                        edges.add((location_name, _convert_ijk_to_string(i + 1, 10, k)))
 
-                elif i == 1 and (j>=2 and j<=9) and k in ['A','D', 'G']: # left border of board
+                elif i == 1 and (2 <= j <= 9) and k in ['A', 'D', 'G']:  # left border of board
 
                     edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
                     edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
                     edges.add((location_name, _convert_ijk_to_string(i + 1, j - 1, k)))
                     edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
 
-                elif i == 10 and (j >= 2 and j <= 9) and k in ['C', 'F', 'J']:  # right border of board
+                elif i == 10 and (2 <= j <= 9) and k in ['C', 'F', 'J']:  # right border of board
 
                     edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
                     edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
                     edges.add((location_name, _convert_ijk_to_string(i - 1, j + 1, k)))
                     edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
 
-                elif j == 1 and (i!=1 and i%2!=0) and k in ['C', 'A', 'B']:  # top border of board
-
+                elif j == 1 and (i != 1 and i % 2 != 0) and k in ['C', 'A', 'B']:  # top border of board
                     edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
-                    edges.add((location_name, _convert_ijk_to_string(i+1, j, k)))
+                    edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
                     edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
 
-                elif j == 10 and (i!=1 and i!=10) and k in ['G', 'H', 'J']:  # bottom border of board
-                    if i%2 == 0:
+                elif j == 10 and (i != 1 and i != 10) and k in ['G', 'H', 'J']:  # bottom border of board
+                    if i % 2 == 0:
                         edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
                         edges.add((location_name, _convert_ijk_to_string(i+1, 10, k)))
                         edges.add((location_name, _convert_ijk_to_string(i - 1, 10, k)))
@@ -143,6 +126,56 @@ def generate_default_gameboard_graph():
                         edges.add((location_name, _convert_ijk_to_string(i - 1, 9, k)))
                         edges.add((location_name, _convert_ijk_to_string(i + 1, 10, k)))
                         edges.add((location_name, _convert_ijk_to_string(i - 1, 10, k)))
+                elif i == 10 and j == 1:
+                    if k in ['A', 'B']:
+                        mapping = dict()
+                        mapping['A'] = 'B'
+                        mapping['B'] = 'C'
+                        edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(1, j, mapping[k])))
+                        edges.add((location_name, _convert_ijk_to_string(1, j + 1, mapping[k])))
+                    elif k in ['D', 'E', 'G', 'H']:
+                        mapping = dict()
+                        mapping['D'] = ['A', 'E']
+                        mapping['E'] = ['B', 'F']
+                        mapping['G'] = ['D', 'H']
+                        mapping['H'] = ['E', 'J']
+                        edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i - 1, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i, 10, mapping[k][0])))
+                        edges.add((location_name, _convert_ijk_to_string(1, j, mapping[k][1])))
+                        edges.add((location_name, _convert_ijk_to_string(1, j + 1, mapping[k][1])))
+                elif i == 1 and j == 1:
+                    if k in ['B', 'C']:
+                        mapping = dict()
+                        mapping['B'] = 'A'
+                        mapping['C'] = 'B'
+                        edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(10, j, mapping[k])))
+                    elif k in ['E', 'F', 'H', 'J']:
+                        mapping = dict()
+                        mapping['E'] = ['D', 'A', 'B']
+                        mapping['F'] = ['E', 'B', 'C']
+                        mapping['H'] = ['G', 'D', 'E']
+                        mapping['J'] = ['H', 'E', 'F']
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, j, k)))
+                        edges.add((location_name, _convert_ijk_to_string(i, j + 1, k)))
+                        edges.add((location_name, _convert_ijk_to_string(10, j, mapping[k][0])))
+                        edges.add((location_name, _convert_ijk_to_string(10, 10, mapping[k][1])))
+                        edges.add((location_name, _convert_ijk_to_string(i, 10, mapping[k][2])))
+                        edges.add((location_name, _convert_ijk_to_string(i + 1, 10, mapping[k][2])))
+                elif i == 10 and j == 10 and k in ['G', 'H']:
+                    mapping = dict()
+                    mapping['G'] = 'H'
+                    mapping['H'] = 'J'
+                    edges.add((location_name, _convert_ijk_to_string(i, j - 1, k)))
+                    edges.add((location_name, _convert_ijk_to_string(i - 1, j, k)))
+                    edges.add((location_name, _convert_ijk_to_string(1, j, mapping[k])))
+
 
     # now we come to corners: an ultra special case. We'll have to hardcode these
     edges.add((_convert_ijk_to_string(1, 1, 'A'), _convert_ijk_to_string(2, 1, 'A')))
@@ -201,19 +234,22 @@ def generate_default_gameboard_graph():
     return G
 
 
-
-def _convert_ijk_to_string(i,j,k):
+def _convert_ijk_to_string(i, j, k):
     location_name = ""
-    if i >= 10:
-        location_name += str(i)
-    else:
-        location_name += ('0' + str(i))
 
-    if j >= 10:
-        location_name += str(j)
-    else:
-        location_name += ('0' + str(j))
+    location_name += str(i) if i >= 10 else '0' + str(i)
+    location_name += str(j) if j >= 10 else '0' + str(j)
     location_name += k
+    # if i >= 10:
+    #     location_name += str(i)
+    # else:
+    #     location_name += ('0' + str(i))
+    #
+    # if j >= 10:
+    #     location_name += str(j)
+    # else:
+    #     location_name += ('0' + str(j))
+    # location_name += k
 
     return location_name
 
