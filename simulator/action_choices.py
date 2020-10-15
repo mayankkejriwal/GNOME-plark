@@ -46,7 +46,7 @@ def move_panther(player, current_gameboard, panther_path):
         print(panther_path)
         return flag_config_dict['failure_code']
 
-    if len(panther_path) > current_gameboard['max_panther_path_length']:
+    if len(panther_path) - 1 > current_gameboard['max_panther_path_length']:
         print('Your path is too long...')
         print(panther_path)
         return flag_config_dict['failure_code']
@@ -256,7 +256,7 @@ def move_update_torpedoes(current_gameboard):
     return flag_config_dict['successful_action']
 
 
-def _pick_torpedo_target(current_gameboard, weapon, plark_pos, plark_det_range, closest_dis,torpedo_dis, torpedo_locs):
+def _pick_torpedo_target(current_gameboard, weapon, plark_pos, plark_det_range, closest_dis, torpedo_dis, torpedo_locs):
     """
 
     :param current_gameboard:
@@ -299,8 +299,8 @@ def _pick_torpedo_target(current_gameboard, weapon, plark_pos, plark_det_range, 
             if weapon.location.calculate_distance(current_gameboard, closest_dis) <= weapon.location.calculate_distance(current_gameboard, plark_pos):
                 print('adding closest_dis to candidate_locations')
                 candidate_locations.add(closest_dis)
-        elif weapon.location.calculate_distance(current_gameboard, closest_dis) <= weapon.location.calculate_distance(current_gameboard, torpedo_dis) \
-                and weapon.location.calculate_distance(current_gameboard, closest_dis) <= weapon.location.calculate_distance(current_gameboard, plark_pos):
+        elif all([weapon.location.calculate_distance(current_gameboard, closest_dis) <= weapon.location.calculate_distance(current_gameboard, t_loc) for t_loc in torpedo_locs]) \
+            and weapon.location.calculate_distance(current_gameboard, closest_dis) <= weapon.location.calculate_distance(current_gameboard, plark_pos):
             print('adding closest_dis to candidate_locations')
             candidate_locations.add(closest_dis)
 
