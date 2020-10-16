@@ -299,7 +299,7 @@ def _pick_torpedo_target(current_gameboard, weapon, plark_pos, plark_det_range, 
             if weapon.location.calculate_distance(current_gameboard, closest_dis) <= weapon.location.calculate_distance(current_gameboard, plark_pos):
                 print('adding closest_dis to candidate_locations')
                 candidate_locations.add(closest_dis)
-        elif all([weapon.location.calculate_distance(current_gameboard, closest_dis) <= weapon.location.calculate_distance(current_gameboard, t_loc) for t_loc in torpedo_locs]) \
+        elif weapon.location.calculate_distance(current_gameboard, closest_dis) <= torpedo_dis \
             and weapon.location.calculate_distance(current_gameboard, closest_dis) <= weapon.location.calculate_distance(current_gameboard, plark_pos):
             print('adding closest_dis to candidate_locations')
             candidate_locations.add(closest_dis)
