@@ -1,5 +1,6 @@
 
 import numpy as np
+import copy
 # import json
 import simulator.initialize_game_elements as initialize_game_elements
 from simulator.flag_config import flag_config_dict
@@ -7,7 +8,15 @@ from simulator.utility_actions import *
 from simulator.weapon import Sonobuoy,Torpedo
 import simulator.example_pelican_agent as example_pelican_agent
 import simulator.example_panther_agent as example_panther_agent
+import simulator.pelican_agent_v1 as pelican_agent_v1
+import simulator.panther_agent_v1 as panther_agnet_v1
+import simulator.james_pelican_agent as james_pelican_agent
 from simulator.agent import Agent
+from collections import defaultdict
+from simulator.novelty_distributions import *
+from simulator.weapon import Weapon
+import functools
+
 
 def simulate_game_instance(game_elements, history_log_file=None, np_seed=2):
     """
@@ -31,6 +40,7 @@ def simulate_game_instance(game_elements, history_log_file=None, np_seed=2):
             p.status = 'current'
 
     while True:
+        game_elements['num_turns'] = turns
         if current_phase == 'pelican_phase':
             print('current phase is pelican')
 
@@ -143,28 +153,43 @@ def set_up_board(player_decision_agents):
 def initialize_player_data(game_elements):
     for p in game_elements['players']:
 
+        # Default Pelican should have 12 sonobuoys and 6 torpedos to fill up 24 slots
+        # If total slots of weapons exceed weapon_bay_size, we stop to add more and start to run the simulator
         if p.player_class == 'Pelican':
             print(p.player_name,' position is being initialized to ',p.agent.init_position)
+
             p.current_position = game_elements['location_map'][p.agent.init_position]
             p.weapons_bay = dict()
-            for k,v in p.agent.init_weapons_bay.items():
-                # check for 24
+            total_slots = 0
+            if 'sonobuoy' not in p.weapons_bay:
+                p.weapons_bay['sonobuoy'] = set()
+            if 'torpedo' not in p.weapons_bay:
+                p.weapons_bay['torpedo'] = set()
+
+            for k, v in p.agent.init_weapons_bay.items():
                 if k == 'sonobuoy_count':
-                    for i in range(0,v):
-                        if 'sonobuoy' not in p.weapons_bay:
-                            p.weapons_bay['sonobuoy'] = set()
-                        s_weapon = Sonobuoy(weapon_name='s'+str(i+1),player=p)
+                    for i in range(0, v):
+                        total_slots += 1
+                        if total_slots > game_elements['weapon_bay_size']:
+                            print('Weapons already fill up maximum weapon bay we could have, stop to adding more...')
+                            break
+                        s_weapon = Sonobuoy(weapon_name='s'+str(i+1), player=p)
                         print(p.player_name, 'is getting sonobuoy ',s_weapon.weapon_name,' in their weapons bay.')
                         p.weapons_bay['sonobuoy'].add(s_weapon)
                         game_elements['weapons_inventory']['s'+str(i+1)] = s_weapon
+
                 elif k == 'torpedo_count':
-                    for i in range(0,v):
-                        if 'torpedo' not in p.weapons_bay:
-                            p.weapons_bay['torpedo'] = set()
-                        t_weapon = Torpedo(weapon_name='t'+str(i+1),player=p)
+                    for i in range(0, v):
+                        total_slots += 2
+                        if total_slots > game_elements['weapon_bay_size']:
+                            print('Weapons already fill up maximum weapon bay we could have, stop to adding more...')
+                            break
+                        t_weapon = Torpedo(weapon_name='t'+str(i+1), player=p)
                         print(p.player_name, 'is getting torpedo ', t_weapon.weapon_name, ' in their weapons bay.')
                         p.weapons_bay['torpedo'].add(t_weapon)
                         game_elements['weapons_inventory']['t'+str(i+1)] = t_weapon
+
+        # Initialize Panther with default status to undamaged
         elif p.player_class == 'Panther':
             if 'panther_zone' not in game_elements['location_map'][p.agent.init_position].special_position_flags:
                 print('panther is not starting from an allowed position. Raising exception')
@@ -176,11 +201,6 @@ def initialize_player_data(game_elements):
                 raise Exception
             print('initializing damage_status of ',p.player_name,' to undamaged.')
             p.damage_status = 'undamaged'
-
-
-
-# def inject_novelty(current_gameboard, novelty_schema=None):
-#     pass
 
 
 def play_game():
@@ -227,35 +247,51 @@ def play_game():
             return winner if winner else None
 
 
-# def play_game_in_tournament(game_seed, inject_novelty_function=None):
-#     print('seed used: ' + str(game_seed))
-#     player_decision_agents = dict()
-#
-#     # player_decision_agents['player_1'] = Agent(**simple_decision_agent_1.decision_agent_methods)
-#     # player_decision_agents['player_2'] = Agent(**simple_decision_agent_1.decision_agent_methods)
-#
-#
-#     game_elements = set_up_board(player_decision_agents)
-#
-#
-#     if inject_novelty_function:
-#         inject_novelty_function(game_elements)
-#
-#     if player_decision_agents['pelican'].startup(game_elements) == flag_config_dict['failure_code'] or \
-#             player_decision_agents['panther'].startup(game_elements) == flag_config_dict['failure_code']:
-#         print("Error in initializing agents. Cannot play the game.")
-#         return None
+def play_game_in_tournament(game_seed, player1, player2, inject_novelty_function=None):
+    print('seed used: ' + str(game_seed))
+
+    player_decision_agents = dict()
+    player_decision_agents['pelican'] = Agent(**player1.decision_agent_methods)
+    player_decision_agents['panther'] = Agent(**player2.decision_agent_methods)
+
+    game_elements = set_up_board(player_decision_agents)
+    print('Finished setting up the board')
+
+    # if inject_novelty_function:
+    #     inject_novelty_function(game_elements)
+
+    if player_decision_agents['pelican'].startup(game_elements) == flag_config_dict['failure_code'] or \
+            player_decision_agents['panther'].startup(game_elements) == flag_config_dict['failure_code']:
+        print("Error in initializing agents. Cannot play the game.")
+        return None
+    else:
+        print('Agents have been successfully started')
+        initialize_player_data(game_elements)
+        print("Finished initializing player data. Entering simulation...")
+
+        if inject_novelty_function:
+            print('injecting novelty')
+            inject_novelty_function(game_elements)
+
+        winner = simulate_game_instance(game_elements, history_log_file=None, np_seed=game_seed)
+
+        if player_decision_agents['pelican'].shutdown() == flag_config_dict['failure_code'] or \
+                player_decision_agents['panther'].shutdown() == flag_config_dict['failure_code']:
+            print('something went wrong, agents have not successfully shut down...')
+            return None
+        else:
+            print("All player agents have been shutdown. ")
+            print("GAME OVER")
+            return winner if winner else None
+
+
+# play_game()
+# winner = play_game_in_tournament(2, pelican_agent_v1, panther_agnet_v1, inject_novelty_function=active_torpedo)
+# res = defaultdict(int)
+# for seed in range(100):
+#     winner = play_game_in_tournament(seed, pelican_agent_v1, panther_agnet_v1, inject_novelty_function=two_layer_property)
+#     if not winner:
+#         res['No Winners'] += 1
 #     else:
-#         print("Sucessfully initialized all player agents.")
-#         winner = simulate_game_instance(game_elements, history_log_file=None, np_seed=game_seed)
-#         if player_decision_agents['pelican'].shutdown() == flag_config_dict['failure_code'] or \
-#                 player_decision_agents['panther'].shutdown() == flag_config_dict['failure_code']:
-#             print("Error in agent shutdown.")
-#             return None
-#         else:
-#             print("All player agents have been shutdown. ")
-#             print("GAME OVER")
-#             return winner
-
-
-play_game()
+#         res[winner.player_name] += 1
+# print(res)

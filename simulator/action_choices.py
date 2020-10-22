@@ -33,9 +33,53 @@ def update_sonobuoys(current_gameboard, sonobuoy_dict):
     return flag_config_dict['successful_action']
 
 
+def sonobuoys_search_locations_nearby(current_gameboard, player, plark_location, det_range):
+    s_updates = dict()
+    sonobuoy_panther_found = set() if 'sonobuoy_panther_found' not in current_gameboard else current_gameboard['sonobuoy_panther_found']
+
+    for weapon_name, weapon in current_gameboard['weapons_inventory'].items():
+        if weapon.location is None or weapon.weapon_class == 'torpedo':
+            continue
+        else:
+            cur_weapon_location = weapon.location
+            print(f'we need to determine new status for sonobuoy {weapon_name} which is currently at {cur_weapon_location.location_name}')
+            if plark_location.calculate_distance(current_gameboard, cur_weapon_location) <= det_range:
+                _sonobuoy_setting_helper(current_gameboard, s_updates, sonobuoy_panther_found, weapon, plark_location, player, det_range)
+                continue
+            else:
+                dis = cur_weapon_location.locate_nearest_disturbed_water(current_gameboard)
+                if dis and dis.calculate_distance(current_gameboard, cur_weapon_location) <= current_gameboard['sonobuoy_disturbed_water_threshold']:
+                    print('sonobuoy is within sonobuoy_disturbed_water_threshold of disturbed water. updating to hot...')
+                    s_updates[weapon_name] = 'hot'
+                    continue
+
+                expl = cur_weapon_location.locate_nearest_underwater_explosion(current_gameboard)
+                if expl and expl.calculate_distance(current_gameboard, cur_weapon_location) <= current_gameboard['sonobuoy_underwater_explosion_threshold']:
+                    print('sonobuoy is within sonobuoy_underwater_explosion_threshold of disturbed water. updating to hot...')
+                    s_updates[weapon_name] = 'hot'
+                    continue
+
+                print('sonobuoy stays cold, or is flipped from hot to cold...')
+                s_updates[weapon_name] = 'cold'
+    return s_updates, sonobuoy_panther_found
+
+
+def _sonobuoy_setting_helper(current_gameboard, s_updates, sonobuoy_panther_found, weapon, plark_location, player, det_range):
+    weapon_name = weapon.weapon_name
+    cur_weapon_location = weapon.location
+
+    print('sonobuoy is within plark det_range. updating to hot...')
+    s_updates[weapon_name] = 'hot'
+    sonobuoy_panther_found.add(cur_weapon_location)
+
+
 def move_panther(player, current_gameboard, panther_path):
     """
-    :return: action code
+    Method to move panther
+    :param player: current player
+    :param current_gameboard: dict of gameboard
+    :param panther_path: path we have decided in the panther agent file with different strategies
+    :return:
     """
     if not panther_path:
         print('there is no path specified. You must specify a path, even if you just stay on the same hex...')
@@ -58,12 +102,16 @@ def move_panther(player, current_gameboard, panther_path):
             return flag_config_dict['failure_code']
 
     # everything seems to have succeeded
+    _move_panther_helper(player, current_gameboard, panther_path)
+    return flag_config_dict['successful_action']
+
+
+def _move_panther_helper(player, current_gameboard, panther_path):
     player.current_position = current_gameboard['location_map'][panther_path[-1]]
     print('setting position of ',player.player_name,' to ',panther_path[-1],' and appending path history...')
     print(panther_path)
     player.path_history.append(panther_path)
     print('player has been successfully moved...')
-    return flag_config_dict['successful_action']
 
 
 def move_pelican_drop_weapons(player, current_gameboard, pelican_path, weapons_dict):
@@ -190,7 +238,7 @@ def move_update_torpedoes(current_gameboard):
             else:
                 torpedo_locs = set()
             print('lets determine the torpedo\'s target...')
-            target_location = _pick_torpedo_target(current_gameboard, weapon, plark.current_position, det_range, closest_dis, torpedo_dis, torpedo_locs)
+            target_location = _pick_torpedo_target(current_gameboard, weapon, plark.current_position, det_range, closest_dis, torpedo_dis, torpedo_locs, plark)
 
 
             if target_location is None:
@@ -245,9 +293,8 @@ def move_update_torpedoes(current_gameboard):
                           f'True because torpedo {weapon_name} hit panther')
                     plark.current_position.underwater_explosion = True
 
-                print('changing state of ',weapon_name,' from ',weapon.state,' to removed and setting location from ',weapon.location.location_name,' to None.')
-                weapon.state = 'removed'
-                weapon.location = None
+                # Remove torpedo if attached and missed
+                _remove_torpedo_after_die_roll(current_gameboard, weapon_name, weapon, die_result)
 
         else:
             print('flipping torpedo ',weapon_name)
@@ -256,7 +303,13 @@ def move_update_torpedoes(current_gameboard):
     return flag_config_dict['successful_action']
 
 
-def _pick_torpedo_target(current_gameboard, weapon, plark_pos, plark_det_range, closest_dis, torpedo_dis, torpedo_locs):
+def _remove_torpedo_after_die_roll(current_gameboard, weapon_name, weapon, die_result):
+    print('changing state of ',weapon_name,' from ',weapon.state,' to removed and setting location from ',weapon.location.location_name,' to None.')
+    weapon.state = 'removed'
+    weapon.location = None
+
+
+def _pick_torpedo_target(current_gameboard, weapon, plark_pos, plark_det_range, closest_dis, torpedo_dis, torpedo_locs, player):
     """
 
     :param current_gameboard:
@@ -278,21 +331,7 @@ def _pick_torpedo_target(current_gameboard, weapon, plark_pos, plark_det_range, 
             print('adding torpedo_locs to candidate_locations')
             candidate_locations = candidate_locations.union(torpedo_locs)
 
-    if weapon.location.calculate_distance(current_gameboard, plark_pos) <= plark_det_range: # does plark_pos belong in candidate set?
-        if not torpedo_dis:
-            if not closest_dis:
-                print('adding plark_pos to candidate_locations')
-                candidate_locations.add(plark_pos)
-            elif weapon.location.calculate_distance(current_gameboard, plark_pos) <= weapon.location.calculate_distance(current_gameboard, closest_dis):
-                print('adding plark_pos to candidate_locations')
-                candidate_locations.add(plark_pos)
-        elif weapon.location.calculate_distance(current_gameboard, plark_pos) <= torpedo_dis:
-            if not closest_dis:
-                print('adding plark_pos to candidate_locations')
-                candidate_locations.add(plark_pos)
-            elif weapon.location.calculate_distance(current_gameboard, plark_pos) <= weapon.location.calculate_distance(current_gameboard, closest_dis):
-                print('adding plark_pos to candidate_locations')
-                candidate_locations.add(plark_pos)
+    _torpedo_detect_plark_helper(current_gameboard, weapon, plark_pos, plark_det_range, torpedo_dis, closest_dis, candidate_locations, player)
 
     if closest_dis: # does closest_dis belong in candidate set?
         if not torpedo_dis:
@@ -324,6 +363,25 @@ def _pick_torpedo_target(current_gameboard, weapon, plark_pos, plark_det_range, 
 
         print('no candidate location is within torpedo_listening_range or otherwise eligible. Returning None...')
         return None
+
+
+def _torpedo_detect_plark_helper(current_gameboard, weapon, plark_pos, plark_det_range, torpedo_dis, closest_dis, candidate_locations, player):
+
+    if weapon.location.calculate_distance(current_gameboard, plark_pos) <= plark_det_range: # does plark_pos belong in candidate set?
+        if not torpedo_dis:
+            if not closest_dis:
+                print('adding plark_pos to candidate_locations')
+                candidate_locations.add(plark_pos)
+            elif weapon.location.calculate_distance(current_gameboard, plark_pos) <= weapon.location.calculate_distance(current_gameboard, closest_dis):
+                print('adding plark_pos to candidate_locations')
+                candidate_locations.add(plark_pos)
+        elif weapon.location.calculate_distance(current_gameboard, plark_pos) <= torpedo_dis:
+            if not closest_dis:
+                print('adding plark_pos to candidate_locations')
+                candidate_locations.add(plark_pos)
+            elif weapon.location.calculate_distance(current_gameboard, plark_pos) <= weapon.location.calculate_distance(current_gameboard, closest_dis):
+                print('adding plark_pos to candidate_locations')
+                candidate_locations.add(plark_pos)
 
 
 def _roll_die():

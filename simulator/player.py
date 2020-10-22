@@ -1,6 +1,7 @@
 
 from simulator.action_choices import *
 
+
 class Player(object):
     def __init__(self,player_name,agent, player_class):
         """
@@ -24,12 +25,11 @@ class Player(object):
 
         self.path_history = list() # this is a list of lists. It traces the player's path throughout the board. It applies to both pelican and panther.
         self.additional_attributes = None # these are for things such as recording whether a sub is deep or shallow etc. It does not apply in the default game.
-
+        self.additional_attributes_history = list()
 
     def change_decision_agent(self, agent):
         print('changing decision agent for ',self.player_name)
         self.agent = agent
-
 
     def manipulate_MAD(self, new_MAD):
 
@@ -39,7 +39,6 @@ class Player(object):
         print('setting new MAD for ',self.player_name,' whose current MAD status is ',self.MAD)
         self.MAD = new_MAD
         print(self.player_name,' now has MAD status ',self.MAD)
-
 
     def eject_sonobuoy(self, ID=None): # if you're a panther, the eject functions should not be used.
         if not self.weapons_bay['sonobuoy']:
@@ -61,7 +60,6 @@ class Player(object):
             print('ejected sonobuoy ', rand_sono.weapon_name)
             return rand_sono
 
-
     def eject_torpedo(self, ID=None):
         if not self.weapons_bay['torpedo']:
             print(self.player_name, ' is trying to eject a torpedo but has no torpedoes remaining...')
@@ -82,7 +80,6 @@ class Player(object):
             print('ejected torpedo ',rand_torp.weapon_name)
             return rand_torp
 
-
     def compute_allowable_pelican_phase_actions(self, current_gameboard):
         print('computing allowable pelican phase actions for ' + self.player_name)
         allowable_actions = set()
@@ -90,7 +87,6 @@ class Player(object):
         allowable_actions.add(move_pelican_drop_weapons)
 
         return allowable_actions
-
 
     def compute_allowable_madman_phase_actions(self, current_gameboard):
         print('computing allowable madman phase actions for ' + self.player_name)
@@ -100,7 +96,6 @@ class Player(object):
 
         return allowable_actions
 
-
     def compute_allowable_maypole_phase_actions(self, current_gameboard):
         print('computing allowable maypole phase actions for ' + self.player_name)
         allowable_actions = set()
@@ -108,7 +103,6 @@ class Player(object):
         allowable_actions.add(update_sonobuoys)
 
         return allowable_actions
-
 
     def compute_allowable_panther_phase_actions(self, current_gameboard):
         print('computing allowable panther phase actions for ' + self.player_name)
@@ -118,7 +112,6 @@ class Player(object):
 
         return allowable_actions
 
-
     def compute_allowable_bloodhound_phase_actions(self, current_gameboard):
         print('computing allowable bloodhound phase actions for ' + self.player_name)
         allowable_actions = set()
@@ -126,7 +119,6 @@ class Player(object):
         allowable_actions.add(move_update_torpedoes)
 
         return allowable_actions
-
 
     def make_pelican_phase_moves(self, current_gameboard):
         """
@@ -154,7 +146,6 @@ class Player(object):
 
         return self._execute_action(action_to_execute, parameters, current_gameboard)
 
-
     def make_madman_phase_moves(self, current_gameboard):
         """
         :param current_gameboard: A dict. The global data structure representing the current game board.
@@ -162,6 +153,7 @@ class Player(object):
         """
         print('We are in the madman phase for '+self.player_name)
         allowable_actions = self.compute_allowable_madman_phase_actions(current_gameboard)
+        # if 1 or 2, add sonobuoy in allowable moves
 
         code = 0
         action_to_execute, parameters = self.agent.make_madman_phase_move(self, current_gameboard, allowable_actions, code)
@@ -180,7 +172,6 @@ class Player(object):
             return self._execute_action(action_to_execute, parameters, current_gameboard)
 
         return self._execute_action(action_to_execute, parameters, current_gameboard)
-
 
     def make_maypole_phase_moves(self, current_gameboard):
         """
@@ -208,7 +199,6 @@ class Player(object):
 
         return self._execute_action(action_to_execute, parameters, current_gameboard)
 
-
     def make_panther_phase_moves(self, current_gameboard):
         """
         :param current_gameboard: A dict. The global data structure representing the current game board.
@@ -234,7 +224,6 @@ class Player(object):
             return self._execute_action(action_to_execute, parameters, current_gameboard)
 
         return self._execute_action(action_to_execute, parameters, current_gameboard)
-
 
     def make_bloodhound_phase_moves(self, current_gameboard):
         """
@@ -263,7 +252,6 @@ class Player(object):
             return self._execute_action(action_to_execute, parameters, current_gameboard)
 
         return self._execute_action(action_to_execute, parameters, current_gameboard)
-
 
     def _execute_action(self, action_to_execute, parameters, current_gameboard):
         """

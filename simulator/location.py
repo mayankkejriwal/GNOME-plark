@@ -44,6 +44,7 @@ class Location(object):
         ans = None
         for location_name, location in current_gameboard['location_map'].items():
             if location.disturbed_water:
+                print(f'find disturbed water at {location_name}')
                 m = self.calculate_distance(current_gameboard, location)
                 if min_dist == -1 or m < min_dist:
                     min_dist = m
@@ -60,6 +61,7 @@ class Location(object):
         ans = None
         for location_name, location in current_gameboard['location_map'].items():
             if location.underwater_explosion:
+                print(f'find explosion at {location_name}')
                 m = self.calculate_distance(current_gameboard, location)
                 if min_dist == -1 or m < min_dist:
                     min_dist = m

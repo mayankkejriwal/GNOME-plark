@@ -5,6 +5,7 @@ class Weapon(object):
         self.weapons_bay_slot = weapons_bay_slot
         self.location = location # this is a location instance
         self.player = player # note that even after the weapon is dropped, the player is still maintained so we
+        self.attributes = None  # either None or dict, if dict(key:name_attribute, value: dict(keys:current_value, list possible values))
         #can track where the weapon came from.
 
 

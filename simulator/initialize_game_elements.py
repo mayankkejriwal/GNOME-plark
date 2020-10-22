@@ -49,8 +49,8 @@ def initialize_board(player_decision_agents):
     game_elements['sonobuoy_disturbed_water_threshold'] = 5
     game_elements['sonobuoy_underwater_explosion_threshold'] = 10
 
-    # weapon inventory slot 24
-    # torpedo 2 sonobuoy 1
+    game_elements['weapon_bay_size'] = 24  # maximum number of slots for filling up weapons
+    game_elements['chat_log'] = dict()  # key: players, values: list(log)
 
     return game_elements
 
@@ -260,7 +260,7 @@ def _initialize_players(game_elements, player_decision_agents):
     players = list()
     # players.append(dict())
     # player_dict = game_schema['players']['player_states']
-    for player in ['pelican','panther']:
+    for player in ['pelican', 'panther']:
         player_args = dict()
         player_args['player_name'] = player
         if player == 'pelican':
