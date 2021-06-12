@@ -1,3 +1,5 @@
+import copy
+
 from simulator import novelty_generator
 from simulator import novelty_functions
 
@@ -47,13 +49,13 @@ def two_layer_property(current_gameboard,
     PlayerAttributeNovelty = novelty_generator.PlayerAttributeNovelty()
 
     attributes = {
-        'two_layer': {
-            'Shallow': ['Shallow', 'Deep']
-        }
+        'two_layer': ['Shallow', 'Deep']
     }
+    current_gameboard['new_attributes'] = copy.deepcopy(attributes)
 
-    WeaponAttributeNovelty.weapon_initialize_two_layer_attributes(current_gameboard, attributes)
-    PlayerAttributeNovelty.panther_initialize_two_layer_attributes(current_gameboard, attributes)
+    # default setting is 'Shallow'
+    WeaponAttributeNovelty.weapon_initialize_two_layer_attributes(current_gameboard)
+    PlayerAttributeNovelty.panther_initialize_two_layer_attributes(current_gameboard)
 
     # Modify func in order for panther and sonobuoy could work property with two layer property
     WeaponActionNovelty = novelty_generator.WeaponActionNovelty()

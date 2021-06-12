@@ -85,7 +85,7 @@ class WeaponAttributeNovelty(AttributeNovelty):
         """
         current_gameboard['torpedo_listening_range'] = range_num
 
-    def weapon_initialize_two_layer_attributes(self, current_gameboard, attributes):
+    def weapon_initialize_two_layer_attributes(self, current_gameboard):
         """
         Create new attribute to present two layer property, initialize attributes of weapon to Shallow and could
         also exchange between Shallow and Deep
@@ -95,14 +95,14 @@ class WeaponAttributeNovelty(AttributeNovelty):
         """
         for name, weapon in current_gameboard['weapons_inventory'].items():
             # if weapon.weapon_class == 'sonobuoy':
-            weapon.attributes = copy.deepcopy(attributes)
+            weapon.attributes = {'two_layer': 'Shallow'}
 
 
 class PlayerAttributeNovelty(AttributeNovelty):
     def __int__(self):
         super().__init__()
 
-    def panther_initialize_two_layer_attributes(self, current_gameboard, attributes):
+    def panther_initialize_two_layer_attributes(self, current_gameboard):
         """
         Add additional attributes for panther player, could also modify this func in order to add attributes for the
         pelican player in the future
@@ -112,7 +112,7 @@ class PlayerAttributeNovelty(AttributeNovelty):
         """
         for player in current_gameboard['players']:
             if player.player_class == 'Panther':
-                player.additional_attributes = copy.deepcopy(attributes)
+                player.additional_attributes = {'two_layer': 'Shallow'}
 
 
 class ShipAttributeNovelty(AttributeNovelty):

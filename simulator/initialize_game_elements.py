@@ -52,6 +52,8 @@ def initialize_board(player_decision_agents):
     game_elements['weapon_bay_size'] = 24  # maximum number of slots for filling up weapons
     game_elements['chat_log'] = dict()  # key: players, values: list(log)
 
+    game_elements['new_attributes'] = None
+
     return game_elements
 
 

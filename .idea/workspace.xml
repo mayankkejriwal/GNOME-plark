@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d3b9838e-4d78-43d7-8950-b5111bcc670f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/GNOME-plark.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GNOME-plark.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/The Hunting of the PLARK v1_4.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/The Hunting of the PLARK v1_4.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simulator/example_pelican_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator/example_pelican_agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simulator/gameplay.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator/gameplay.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -237,7 +233,7 @@
       <workItem from="1601402108023" duration="806000" />
       <workItem from="1601403345779" duration="38000" />
       <workItem from="1623257639571" duration="4568000" />
-      <workItem from="1623515482445" duration="4581000" />
+      <workItem from="1623515482445" duration="5670000" />
     </task>
     <servers />
   </component>
