@@ -1,0 +1,15 @@
+Without Novelty,,,,With Novelty,,,,,,,,,,
+pelican1,panther1,No Winner1,,pelican2,panther2,No Winner2,,t-Test: Paired Two Sample for Means,,,,t-Test: Paired Two Sample for Means,,
+0.3,0.5,0.2,,0.24,0.72,0.04,,,,,,,,
+0.4,0.44,0.16,,0.44,0.36,0.2,,,pelican1,pelican2,,,panther1,panther2
+0.38,0.4,0.22,,0.36,0.32,0.32,,Mean,0.358,0.364,,Mean,0.446,0.432
+0.34,0.42,0.24,,0.52,0.26,0.22,,Variance,0.003862222,0.009582222,,Variance,0.003737778,0.019128889
+0.44,0.32,0.24,,0.46,0.4,0.14,,Observations,10,10,,Observations,10,10
+0.42,0.44,0.14,,0.26,0.56,0.18,,Pearson Correlation,-0.064290737,,,Pearson Correlation,0.474102678,
+0.32,0.52,0.16,,0.32,0.42,0.26,,Hypothesized Mean Difference,0,,,Hypothesized Mean Difference,0,
+0.42,0.5,0.08,,0.24,0.54,0.22,,df,9,,,df,9,
+0.3,0.42,0.28,,0.38,0.32,0.3,,t Stat,-0.159074172,,,t Stat,0.363313099,
+0.26,0.5,0.24,,0.42,0.42,0.16,,P(T<=t) one-tail,0.438561463,,,P(T<=t) one-tail,0.362379075,
+,,,,,,,,t Critical one-tail,1.833112933,,,t Critical one-tail,1.833112933,
+,,,,,,,,P(T<=t) two-tail,0.877122926,,,P(T<=t) two-tail,0.72475815,
+,,,,,,,,t Critical two-tail,2.262157163,,,t Critical two-tail,2.262157163,

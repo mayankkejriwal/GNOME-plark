@@ -285,8 +285,13 @@ def play_game_in_tournament(game_seed, player1, player2, inject_novelty_function
             return winner if winner else None
 
 
-# play_game()
+# Playing one default tournament
+play_game()
+
+# Playing one tournament with novelty injection
 # winner = play_game_in_tournament(2, pelican_agent_v1, panther_agnet_v1, inject_novelty_function=active_torpedo)
+
+# Playing multiple tournaments with novelty injection and see winners
 # res = defaultdict(int)
 # for seed in range(100):
 #     winner = play_game_in_tournament(seed, pelican_agent_v1, panther_agnet_v1, inject_novelty_function=two_layer_property)

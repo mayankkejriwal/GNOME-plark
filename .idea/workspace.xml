@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d3b9838e-4d78-43d7-8950-b5111bcc670f" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/GNOME-plark.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GNOME-plark.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/The Hunting of the PLARK v1_4.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/The Hunting of the PLARK v1_4.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator/example_pelican_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator/example_pelican_agent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator/gameplay.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator/gameplay.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,8 +53,12 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -80,6 +88,19 @@
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
       <method />
+    </configuration>
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="auxiliary_functions" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="GNOME-plark" />
@@ -125,13 +146,10 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="gameplay" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="gameplay" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNOME-plark" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/simulator" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -140,7 +158,7 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/simulator/gameplay.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
@@ -169,18 +187,42 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test_harness_v1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNOME-plark" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/simulator" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/simulator/test_harness_v1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.auxiliary_functions" />
       <item itemvalue="Python.gameplay" />
       <item itemvalue="Python.initialize_game_elements" />
       <item itemvalue="Python.example_pelican_agent" />
+      <item itemvalue="Python.test_harness_v1" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.gameplay" />
+        <item itemvalue="Python.test_harness_v1" />
+        <item itemvalue="Python.gameplay" />
         <item itemvalue="Python.initialize_game_elements" />
         <item itemvalue="Python.example_pelican_agent" />
-        <item itemvalue="Python.auxiliary_functions" />
       </list>
     </recent_temporary>
   </component>
@@ -194,6 +236,8 @@
       <updated>1598037466584</updated>
       <workItem from="1601402108023" duration="806000" />
       <workItem from="1601403345779" duration="38000" />
+      <workItem from="1623257639571" duration="4568000" />
+      <workItem from="1623515482445" duration="4581000" />
     </task>
     <servers />
   </component>
@@ -207,17 +251,6 @@
     <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
       <collection />
     </option>
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="-1472" y="112" key="#Project_Structure" timestamp="1601403381342">
-      <screen x="-1920" y="0" width="1920" height="1080" />
-    </state>
-    <state x="-1472" y="112" key="#Project_Structure/-1920.0.1920.1080/0.0.1440.900@-1920.0.1920.1080" timestamp="1601403381342" />
-    <state x="-1472" y="133" key="#Project_Structure/-1920.23.1920.1057/0.23.1440.834@-1920.23.1920.1057" timestamp="1601402204422" />
-    <state x="-1472" y="133" key="SettingsEditor" timestamp="1601402288635">
-      <screen x="-1920" y="23" width="1920" height="1057" />
-    </state>
-    <state x="-1472" y="133" key="SettingsEditor/-1920.23.1920.1057/0.23.1440.834@-1920.23.1920.1057" timestamp="1601402288635" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

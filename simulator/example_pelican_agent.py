@@ -82,7 +82,7 @@ def initialization_routine(agent, current_gameboard):
     if agent.agent_type == 'Panther':
         agent.init_position = '0503H'
     elif agent.agent_type == 'Pelican':
-        agent.init_position = '0602H'
+        agent.init_position = '0504C'
         agent.init_weapons_bay = dict()
         agent.init_weapons_bay['sonobuoy_count'] = 12
         agent.init_weapons_bay['torpedo_count'] = 6
